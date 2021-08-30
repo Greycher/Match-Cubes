@@ -1,13 +1,19 @@
 using UnityEngine;
 
 public class Board : MonoBehaviour {
-    [SerializeField] private Cube cubeRes;
+    [SerializeField] private Cube[] cubeResources;
     [SerializeField] private uint rowCount = 10;
     [SerializeField] private uint columnCount = 12;
     [SerializeField] private Color debugBorderColor = Color.green;
 
     private const float CubeSpawnViewportHeight = 1.1f;
     private const float ColliderWidth = 1f;
+
+    public uint ColumnCount => columnCount;
+    public Transform Parent => transform;
+    public ComponentCache<Cube> cubeCache = new ComponentCache<Cube>();
+
+    private Column[] _columns;
     
     private void Awake() {
         SetupColliders();
@@ -23,36 +29,38 @@ public class Board : MonoBehaviour {
     private void SetupRightCollider() {
         var collider = gameObject.AddComponent<BoxCollider2D>();
         var halfColumnUnit = columnCount * 0.5f;
-        collider.offset = transform.TransformPoint(new Vector3(halfColumnUnit + ColliderWidth * 0.5f, 0, 0));
+        collider.offset = new Vector3(halfColumnUnit + ColliderWidth * 0.5f, 0, 0);
         collider.size = new Vector3(ColliderWidth, rowCount, 0);
     }
     
     private void SetupLeftCollider() {
         var collider = gameObject.AddComponent<BoxCollider2D>();
         var halfColumnUnit = columnCount * 0.5f;
-        collider.offset = transform.TransformPoint(new Vector3(-(halfColumnUnit + ColliderWidth * 0.5f), 0, 0));
+        collider.offset = new Vector3(-(halfColumnUnit + ColliderWidth * 0.5f), 0, 0);
         collider.size = new Vector3(ColliderWidth, rowCount, 0);
     }
     
     private void SetupBottomCollider() {
         var collider = gameObject.AddComponent<BoxCollider2D>();
         var halfRowUnit = rowCount * 0.5f;
-        collider.offset = transform.TransformPoint(new Vector3(0, -(halfRowUnit + ColliderWidth * 0.5f), 0));
+        collider.offset = new Vector3(0, -(halfRowUnit + ColliderWidth * 0.5f), 0);
         collider.size = new Vector3(columnCount, ColliderWidth, 0);
     }
     
     private void PopulateCubes() {
-        var camera = Camera.main;
-        var y = camera.ViewportToWorldPoint(new Vector3(0, CubeSpawnViewportHeight, 0)).y;
-        var halfColumnUnit = columnCount * 0.5f;
-        for (int i = 0; i < rowCount; i++) {
-            var x = -(halfColumnUnit - 0.5f);
-            for (int j = 0; j < columnCount; j++) {
-                Instantiate(cubeRes, new Vector3(x, y, 0), Quaternion.identity, transform);
-                x++;
+        _columns = new Column[columnCount];
+        for (uint i = 0; i < columnCount; i++) {
+            var column = new Column(this, i);
+            for (uint j = 0; j < rowCount; j++) {
+                column.SpawnCube();
             }
-            y++;
+            _columns[i] = column;
         }
+    }
+
+    public Cube GetRandomCubeResource() {
+        var rnd = Random.Range(0, cubeResources.Length);
+        return cubeResources[rnd];
     }
 
     private void OnDrawGizmos() {

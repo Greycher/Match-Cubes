@@ -65,7 +65,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95face06b20a554f94f68bef005eeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeRes: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+  cubeResources:
+  - {fileID: 780095107499222153, guid: e9f3e3580b21bf149976227ba36e037f, type: 3}
+  - {fileID: 640355177565630191, guid: 84bbf6dfc5ab0c44ba3e9ae359ca636d, type: 3}
+  - {fileID: 7923904914938508859, guid: 47798c8595a689a468620441d3f6f035, type: 3}
+  - {fileID: 1277255161621273466, guid: be4931890aa5a514283feaf91595e9bb, type: 3}
+  - {fileID: 2826834901927738769, guid: 72d76ef298e8b11408a913f00eed1e9b, type: 3}
+  - {fileID: 8870861649263484257, guid: 6d79c640d38c3574f980385f4faf7ce8, type: 3}
   rowCount: 10
   columnCount: 12
-  debugBorderColor: {r: 0, g: 0.66, b: 0, a: 1}
+  debugBorderColor: {r: 0, g: 0.11440849, b: 0.65882355, a: 1}
