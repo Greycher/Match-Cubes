@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class Board : MonoBehaviour {
+    [SerializeField] private GameValuesStorage gameValuesStorage;
     [SerializeField] private Cube[] cubeResources;
     [SerializeField] private uint rowCount = 10;
     [SerializeField] private uint columnCount = 12;
@@ -10,19 +11,27 @@ public class Board : MonoBehaviour {
 
     public Transform Parent => transform;
 
+    public GameValuesStorage GameValuesStorage => _gameValuesStorage;
+
     private Column[] _columns;
-    
+    private CubeMap _cubeMap = new CubeMap();
+    private GameValuesStorage _gameValuesStorage;
+
     private void Awake() {
-        PopulateCubes();
+        _cubeMap.Initialize(rowCount, columnCount);
+        PopulateCubesAndFillCubeTypeMap();
+        _cubeMap.FormChains();
     }
-    
-    private void PopulateCubes() {
+
+    private void PopulateCubesAndFillCubeTypeMap() {
         _columns = new Column[columnCount];
         for (uint i = 0; i < columnCount; i++) {
             var columnIndex = i;
             var column = new Column(this, columnIndex);
             for (uint j = 0; j < rowCount; j++) {
-                column.SpawnCube();
+                var cube = column.SpawnCube();
+                var rowIndex = j;
+                _cubeMap.SetCube(new BoardCoordinate(rowIndex, columnIndex), cube);
             }
             _columns[i] = column;
         }
@@ -91,15 +100,5 @@ public class Board : MonoBehaviour {
             Gizmos.DrawLine(bottomLeft, topLeft);
         }
         Gizmos.color = oldColor;
-    }
-    
-    public struct BoardCoordinate {
-        public uint rowIndex;
-        public uint columnIndex;
-
-        public BoardCoordinate(uint rowIndex, uint columnIndex) {
-            this.rowIndex = rowIndex;
-            this.columnIndex = columnIndex;
-        }
     }
 }

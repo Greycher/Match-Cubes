@@ -15,6 +15,22 @@ PrefabInstance:
       propertyPath: cubeType
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b828b85f15f3fb48837d118e547eb6f, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 52a34257e2835d2428945ed052bd6f35, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 56ed91d2eb494ff4399fbd8d0970487e, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 89add072834d6a7428bcb0619e5fa95c, type: 3}
     - target: {fileID: 9197075261470937660, guid: b48872c7401d4ca418c78584762076d5, type: 3}
       propertyPath: m_Name
       value: Purple Cube

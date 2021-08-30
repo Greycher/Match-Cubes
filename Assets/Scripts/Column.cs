@@ -13,7 +13,7 @@ public class Column {
     }
     
     public Cube SpawnCube() {
-        var worldPos = _board.BoardCoordToSpawnWorldPos(new Board.BoardCoordinate(_elementCount, _columnIndex));
+        var worldPos = _board.BoardCoordToSpawnWorldPos(new BoardCoordinate(_elementCount, _columnIndex));
         var cube = Object.Instantiate(_board.GetRandomCubeResource(), worldPos, Quaternion.identity, _board.Parent);
         var rowIndex = _elementCount++;
         cube.AssignToColumn(this, rowIndex);
@@ -21,6 +21,6 @@ public class Column {
     }
 
     public Vector3 RowIndexToWorldPos(uint rowIndex) {
-        return _board.BoardCoordToWorldPos(new Board.BoardCoordinate(rowIndex, _columnIndex));
+        return _board.BoardCoordToWorldPos(new BoardCoordinate(rowIndex, _columnIndex));
     }
 }

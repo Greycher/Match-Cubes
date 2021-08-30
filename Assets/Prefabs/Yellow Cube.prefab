@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: caecca5a77f14274296449fd585b6bfc, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: e091e0a0d55366340a146e9909a4bed8, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 9ba8805eb9419de458ee65a1d03db057, type: 3}
+    - target: {fileID: 8504985802929000990, guid: b48872c7401d4ca418c78584762076d5, type: 3}
+      propertyPath: sprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 8a7c9c5b5630f954e85e23c9eef1ac56, type: 3}
     - target: {fileID: 9197075261470937660, guid: b48872c7401d4ca418c78584762076d5, type: 3}
       propertyPath: m_Name
       value: Yellow Cube

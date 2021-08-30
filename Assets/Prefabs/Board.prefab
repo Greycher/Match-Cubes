@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95face06b20a554f94f68bef005eeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameValues: {fileID: 11400000, guid: 1eb4ff81cb55024428e6b71c214409b6, type: 2}
   cubeResources:
   - {fileID: 780095107499222153, guid: e9f3e3580b21bf149976227ba36e037f, type: 3}
   - {fileID: 640355177565630191, guid: 84bbf6dfc5ab0c44ba3e9ae359ca636d, type: 3}

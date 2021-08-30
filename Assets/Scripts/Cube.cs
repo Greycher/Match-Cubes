@@ -2,13 +2,21 @@ using System;
 using UnityEngine;
 
 public class Cube : MonoBehaviour {
+    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private Sprite[] sprites;
     [SerializeField] private CubeType type;
     [SerializeField] private FakeGravityModule fakeGravityModule;
     
     public CubeType Type => type;
 
+    public CubeChain Chain {
+        get => _chain;
+        set => _chain = value;
+    }
+
     private State _state = State.Positioned;
     private Column _column;
+    private CubeChain _chain;
     private uint _rowIndex;
     private Vector3 _targetPosition;
 
@@ -55,15 +63,21 @@ public class Cube : MonoBehaviour {
             fakeGravityModule.ResetSpeed();
         }
     }
+    
+    public BoardCoordinate GetCoord() {
+        return new BoardCoordinate(_rowIndex, _column.ColumnIndex);
+    }
+    
+    public void UpdateVisual(int visualIndex) {
+        renderer.sprite = sprites[visualIndex];
+    }
 
-    [Serializable]
-    public enum CubeType {
-        Yellow,
-        Blue,
-        Green,
-        Pink,
-        Purple,
-        Red
+    private void OnDrawGizmosSelected() {
+        var cubes = _chain.Cubes;
+        for (int i = 0; i < cubes.Count; i++) {
+            var tr = cubes[i].transform;
+            Gizmos.DrawSphere(tr.position, 0.3f);
+        }
     }
 
     private enum State {

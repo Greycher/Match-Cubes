@@ -198,6 +198,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef6f0543db5cc94aad922042bb804c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderer: {fileID: 9197075261470937663}
+  sprites:
+  - {fileID: 21300000, guid: d8c7cf5c620e4a54aaaf11066e0bb052, type: 3}
+  - {fileID: 21300000, guid: 1ab67a82f2036d445ac2fa7f6709850c, type: 3}
+  - {fileID: 21300000, guid: 2de98086391fb5149bf0da63628ed383, type: 3}
+  - {fileID: 21300000, guid: 57b61eb998686e04e92d0d02fc1a3f9f, type: 3}
   type: 0
   fakeGravityModule:
     gravityMagnitudeInTime:
