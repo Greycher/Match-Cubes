@@ -7,50 +7,20 @@ public class Board : MonoBehaviour {
     [SerializeField] private Color debugBorderColor = Color.green;
 
     private const float CubeSpawnViewportHeight = 1.1f;
-    private const float ColliderWidth = 1f;
 
-    public uint ColumnCount => columnCount;
     public Transform Parent => transform;
-    public ComponentCache<Cube> cubeCache = new ComponentCache<Cube>();
 
     private Column[] _columns;
     
     private void Awake() {
-        SetupColliders();
         PopulateCubes();
-    }
-
-    private void SetupColliders() {
-        SetupRightCollider();
-        SetupLeftCollider();
-        SetupBottomCollider();
-    }
-
-    private void SetupRightCollider() {
-        var collider = gameObject.AddComponent<BoxCollider2D>();
-        var halfColumnUnit = columnCount * 0.5f;
-        collider.offset = new Vector3(halfColumnUnit + ColliderWidth * 0.5f, 0, 0);
-        collider.size = new Vector3(ColliderWidth, rowCount, 0);
-    }
-    
-    private void SetupLeftCollider() {
-        var collider = gameObject.AddComponent<BoxCollider2D>();
-        var halfColumnUnit = columnCount * 0.5f;
-        collider.offset = new Vector3(-(halfColumnUnit + ColliderWidth * 0.5f), 0, 0);
-        collider.size = new Vector3(ColliderWidth, rowCount, 0);
-    }
-    
-    private void SetupBottomCollider() {
-        var collider = gameObject.AddComponent<BoxCollider2D>();
-        var halfRowUnit = rowCount * 0.5f;
-        collider.offset = new Vector3(0, -(halfRowUnit + ColliderWidth * 0.5f), 0);
-        collider.size = new Vector3(columnCount, ColliderWidth, 0);
     }
     
     private void PopulateCubes() {
         _columns = new Column[columnCount];
         for (uint i = 0; i < columnCount; i++) {
-            var column = new Column(this, i);
+            var columnIndex = i;
+            var column = new Column(this, columnIndex);
             for (uint j = 0; j < rowCount; j++) {
                 column.SpawnCube();
             }
@@ -61,6 +31,43 @@ public class Board : MonoBehaviour {
     public Cube GetRandomCubeResource() {
         var rnd = Random.Range(0, cubeResources.Length);
         return cubeResources[rnd];
+    }
+    
+    public Vector3 BoardCoordToSpawnWorldPos(BoardCoordinate boardCoordinate) {
+        var halfColumnUnit = columnCount * 0.5f;
+        var parentPos = Parent.position;
+        var firstRowWorldPos = parentPos.x - (halfColumnUnit - 0.5f);
+        
+        var worldPos = Vector2.zero;
+        worldPos.x = firstRowWorldPos + boardCoordinate.columnIndex;
+        worldPos.y = CalculateInitialHeightAboveCamera() + boardCoordinate.rowIndex;
+        return worldPos;
+    }
+    
+    private float CalculateInitialHeightAboveCamera() {
+        var camera = Camera.main;
+        return camera.ViewportToWorldPoint(new Vector3(0, CubeSpawnViewportHeight, 0)).y;
+    }
+    
+    public Vector3 BoardCoordToWorldPos(BoardCoordinate boardCoordinate) {
+        var worldPos = Vector2.zero;
+        worldPos.x = CalculateColumnHorizontalWorldPos(boardCoordinate.columnIndex);
+        worldPos.y = CalculateRowVerticalWorldPos(boardCoordinate.rowIndex);
+        return worldPos;
+    }
+
+    private float CalculateColumnHorizontalWorldPos(uint columnIndex) {
+        var halfColumnUnit = columnCount * 0.5f;
+        var parentPos = Parent.position;
+        var firstColPos = parentPos.x - (halfColumnUnit - 0.5f);
+        return firstColPos + columnIndex;
+    }
+    
+    private float CalculateRowVerticalWorldPos(uint rowIndex) {
+        var halfRowUnit = rowCount * 0.5f;
+        var parentPos = Parent.position;
+        var firstRowPos = parentPos.y - (halfRowUnit - 0.5f);
+        return firstRowPos + rowIndex;
     }
 
     private void OnDrawGizmos() {
@@ -84,5 +91,15 @@ public class Board : MonoBehaviour {
             Gizmos.DrawLine(bottomLeft, topLeft);
         }
         Gizmos.color = oldColor;
+    }
+    
+    public struct BoardCoordinate {
+        public uint rowIndex;
+        public uint columnIndex;
+
+        public BoardCoordinate(uint rowIndex, uint columnIndex) {
+            this.rowIndex = rowIndex;
+            this.columnIndex = columnIndex;
+        }
     }
 }
