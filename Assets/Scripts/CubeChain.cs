@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 
 public class CubeChain {
-    private List<Cube> cubes = new List<Cube>();
-
     public List<Cube> Cubes => cubes;
+    public int Length => cubes.Count;
+    
+    private List<Cube> cubes = new List<Cube>();
+    private readonly CubeMap _cubeMap;
+
+    public CubeChain(CubeMap cubeMap) {
+        _cubeMap = cubeMap;
+    }
     
     public void Add(Cube cube) {
+        cube.AttachToChain(this);
         cubes.Add(cube);
-        cube.Chain = this;
     }
 
     public void UpdateCubeVisuals() {
@@ -26,5 +32,20 @@ public class CubeChain {
         for (int i = 0; i < cubes.Count; i++) {
             cubes[i].UpdateVisual(breakPointIndex);
         }
+    }
+
+    public void OnPointed() {
+        var storage = GameValues.Instance.Storage;
+        var chainLength = cubes.Count;
+        if (chainLength >= storage.minCollapsableChainLength) {
+            CollapseAndReformChains();
+        }
+    }
+
+    private void CollapseAndReformChains() {
+        for (int i = 0; i < cubes.Count; i++) {
+            cubes[i].Collapse();
+        }
+        _cubeMap.ReformChains();
     }
 }

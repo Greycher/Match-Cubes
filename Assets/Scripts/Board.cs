@@ -1,48 +1,71 @@
 using UnityEngine;
 
 public class Board : MonoBehaviour {
-    [SerializeField] private GameValuesStorage gameValuesStorage;
     [SerializeField] private Cube[] cubeResources;
-    [SerializeField] private uint rowCount = 10;
-    [SerializeField] private uint columnCount = 12;
+    [SerializeField] private int rowCount = 10;
+    [SerializeField] private int columnCount = 12;
     [SerializeField] private Color debugBorderColor = Color.green;
 
-    private const float CubeSpawnViewportHeight = 1.1f;
+    private const float CubeSpawnViewportHeight = 1.05f;
+    private const int PopulationPerCube = 100;
 
     public Transform Parent => transform;
-
-    public GameValuesStorage GameValuesStorage => _gameValuesStorage;
+    public CubeMap CubeMap => _cubeMap;
+    public GameObjectPool<Cube> CubePool => _cubePool;
 
     private Column[] _columns;
     private CubeMap _cubeMap = new CubeMap();
+    private GameObjectPool<Cube> _cubePool;
     private GameValuesStorage _gameValuesStorage;
 
     private void Awake() {
-        _cubeMap.Initialize(rowCount, columnCount);
-        PopulateCubesAndFillCubeTypeMap();
+        _cubeMap.Initialize(this, rowCount, columnCount);
+        PopulateCubePool();
+        CreateColumns();
+        CreateColumns();
+        SpawnCubes();
         _cubeMap.FormChains();
     }
 
-    private void PopulateCubesAndFillCubeTypeMap() {
-        _columns = new Column[columnCount];
-        for (uint i = 0; i < columnCount; i++) {
-            var columnIndex = i;
-            var column = new Column(this, columnIndex);
-            for (uint j = 0; j < rowCount; j++) {
-                var cube = column.SpawnCube();
-                var rowIndex = j;
-                _cubeMap.SetCube(new BoardCoordinate(rowIndex, columnIndex), cube);
+    private void PopulateCubePool() {
+        CreateCubePool();
+        var cubeCount = cubeResources.Length;
+        for (int i = 0; i < cubeCount; i++) {
+            for (int j = 0; j < PopulationPerCube; j++) {
+                var cubeResource = cubeResources[i];
+                _cubePool.Push(Instantiate(cubeResource));
             }
-            _columns[i] = column;
         }
     }
 
-    public Cube GetRandomCubeResource() {
-        var rnd = Random.Range(0, cubeResources.Length);
-        return cubeResources[rnd];
+    private void CreateCubePool() {
+        var parent = new GameObject("Cube Pool").transform;
+        parent.SetParent(Parent);
+        _cubePool = new GameObjectPool<Cube>(parent);
     }
-    
-    public Vector3 BoardCoordToSpawnWorldPos(BoardCoordinate boardCoordinate) {
+
+    private void SpawnCubes() {
+        for (int i = 0; i < columnCount; i++) {
+            for (int j = 0; j < rowCount; j++) {
+                _columns[i].SpawnCube();
+            }
+        }
+    }
+
+    public void Shuffle() {
+        for (int i = 0; i < columnCount; i++) {
+            _columns[i].Shuffle(rowCount);
+        }
+    }
+
+    private void CreateColumns() {
+        _columns = new Column[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            _columns[i] = new Column(this, i);
+        }
+    }
+
+    public Vector3 CoordToSpawnPos(BoardCoordinate boardCoordinate) {
         var halfColumnUnit = columnCount * 0.5f;
         var parentPos = Parent.position;
         var firstRowWorldPos = parentPos.x - (halfColumnUnit - 0.5f);
@@ -58,21 +81,21 @@ public class Board : MonoBehaviour {
         return camera.ViewportToWorldPoint(new Vector3(0, CubeSpawnViewportHeight, 0)).y;
     }
     
-    public Vector3 BoardCoordToWorldPos(BoardCoordinate boardCoordinate) {
+    public Vector3 CoordtoPos(BoardCoordinate boardCoordinate) {
         var worldPos = Vector2.zero;
         worldPos.x = CalculateColumnHorizontalWorldPos(boardCoordinate.columnIndex);
         worldPos.y = CalculateRowVerticalWorldPos(boardCoordinate.rowIndex);
         return worldPos;
     }
 
-    private float CalculateColumnHorizontalWorldPos(uint columnIndex) {
+    private float CalculateColumnHorizontalWorldPos(int columnIndex) {
         var halfColumnUnit = columnCount * 0.5f;
         var parentPos = Parent.position;
         var firstColPos = parentPos.x - (halfColumnUnit - 0.5f);
         return firstColPos + columnIndex;
     }
     
-    private float CalculateRowVerticalWorldPos(uint rowIndex) {
+    private float CalculateRowVerticalWorldPos(int rowIndex) {
         var halfRowUnit = rowCount * 0.5f;
         var parentPos = Parent.position;
         var firstRowPos = parentPos.y - (halfRowUnit - 0.5f);

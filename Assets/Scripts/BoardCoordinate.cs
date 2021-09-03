@@ -1,8 +1,8 @@
 public struct BoardCoordinate {
-    public uint rowIndex;
-    public uint columnIndex;
+    public int rowIndex;
+    public int columnIndex;
 
-    public BoardCoordinate(uint rowIndex, uint columnIndex) {
+    public BoardCoordinate(int rowIndex, int columnIndex) {
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
     }

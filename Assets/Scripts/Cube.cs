@@ -1,37 +1,37 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Cube : MonoBehaviour {
+public class Cube : MonoBehaviour{
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private CubeType type;
     [SerializeField] private FakeGravityModule fakeGravityModule;
     
-    public CubeType Type => type;
+    private const int DefaultVisualIndex = 0;
 
-    public CubeChain Chain {
-        get => _chain;
-        set => _chain = value;
-    }
+    public CubeType Type => type;
+    public CubeChain Chain => _chain;
+    public int RowIndex => _rowIndex;
+    public BoardCoordinate Coord => new BoardCoordinate(_rowIndex, _column.ColumnIndex);
 
     private State _state = State.Positioned;
     private Column _column;
     private CubeChain _chain;
-    private uint _rowIndex;
+    private int _rowIndex;
     private Vector3 _targetPosition;
 
     private void Awake() {
         fakeGravityModule.Initialize();
     }
 
-    public void AssignToColumn(Column column, uint rowIndex) {
+    public void AssignToCell(Column column, int rowIndex) {
         _column = column;
         _rowIndex = rowIndex;
-        UpdateTargetPosition();
     }
 
-    private void UpdateTargetPosition() {
-        _targetPosition = _column.RowIndexToWorldPos(_rowIndex);
+    public void SetTargetPosition(Vector3 targetPos) {
+        _targetPosition = targetPos;
         _state = State.Positioning;
     }
 
@@ -71,7 +71,24 @@ public class Cube : MonoBehaviour {
     public void UpdateVisual(int visualIndex) {
         renderer.sprite = sprites[visualIndex];
     }
+    
+    public void OnPointed() {
+        _chain.OnPointed();
+    }
+    
+    public void Collapse() {
+        _column.OnCubeDestroy(this);
+    }
 
+    public void AttachToChain(CubeChain chain) {
+        _chain = chain;
+    }
+    
+    public void DetachFromChain() {
+        _chain = null;
+        UpdateVisual(DefaultVisualIndex);
+    }
+    
     private void OnDrawGizmosSelected() {
         var cubes = _chain.Cubes;
         for (int i = 0; i < cubes.Count; i++) {
