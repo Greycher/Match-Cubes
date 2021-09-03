@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Game Values
   m_EditorClassIdentifier: 
   minCollapsableChainLength: 2
-  cubeVisualBreakpoints: 00000000040000000700000009000000
+  cubeVisualBreakpoints: 00000000040000000600000008000000
+  cubeUnit: 1

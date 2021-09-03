@@ -122,7 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef6f0543db5cc94aad922042bb804c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
   renderer: {fileID: 9197075261470937663}
   sprites:
   - {fileID: 21300000, guid: d8c7cf5c620e4a54aaaf11066e0bb052, type: 3}
@@ -136,21 +135,21 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 12
-        outSlope: 12
-        tangentMode: 34
-        weightedMode: 0
+        value: -0.020019531
+        inSlope: 12.02002
+        outSlope: 41.207256
+        tangentMode: 1
+        weightedMode: 2
         inWeight: 0
-        outWeight: 0.33333334
+        outWeight: 0.17396855
       - serializedVersion: 3
-        time: 1
-        value: 12
-        inSlope: 12
-        outSlope: 12
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0.33333334
+        time: 2
+        value: 24
+        inSlope: 1.2599651
+        outSlope: 12.02002
+        tangentMode: 1
+        weightedMode: 1
+        inWeight: 0.029483736
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
