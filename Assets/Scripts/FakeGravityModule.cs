@@ -1,31 +1,33 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public struct FakeGravityModule {
-    [SerializeField] private AnimationCurve gravityMagnitudeInTime;
-    
-    private float _curveEndTime;
-    private float _time;
+namespace MatchCubes {
+    [Serializable]
+    public struct FakeGravityModule {
+        [SerializeField] private AnimationCurve gravityMagnitudeInTime;
 
-    public void Initialize() {
-        _curveEndTime = CalculateCurveLength();
-    }
+        private float _curveEndTime;
+        private float _time;
 
-    private float CalculateCurveLength() {
-        var keyFrames = gravityMagnitudeInTime.keys;
-        return keyFrames[keyFrames.Length - 1].time;
-    }
+        public void Initialize() {
+            _curveEndTime = CalculateCurveLength();
+        }
 
-    public void Accelerate(float deltaTime) {
-        _time = Mathf.Min(_time + deltaTime, _curveEndTime);
-    }
+        private float CalculateCurveLength() {
+            var keyFrames = gravityMagnitudeInTime.keys;
+            return keyFrames[keyFrames.Length - 1].time;
+        }
 
-    public float GetGravitySpeed() {
-        return gravityMagnitudeInTime.Evaluate(_time);
-    }
+        public void Accelerate(float deltaTime) {
+            _time = Mathf.Min(_time + deltaTime, _curveEndTime);
+        }
 
-    public void ResetSpeed() {
-        _time = 0;
+        public float GetGravitySpeed() {
+            return gravityMagnitudeInTime.Evaluate(_time);
+        }
+
+        public void ResetSpeed() {
+            _time = 0;
+        }
     }
 }

@@ -1,22 +1,25 @@
 using UnityEngine;
 
-public class GameValues : MonoBehaviour {
-    [SerializeField] private GameValuesStorage storage;
+namespace MatchCubes {
+    public class GameValues : MonoBehaviour {
+        [SerializeField] private GameValuesStorage storage;
 
-    public static GameValues Instance {
-        get {
-            if (_instance == null) {
-                _instance = FindObjectOfType<GameValues>();
+        public static GameValues Instance {
+            get {
+                if (_instance == null) {
+                    _instance = FindObjectOfType<GameValues>();
+                }
+
+                return _instance;
             }
-            return _instance;
         }
-    }
 
-    public GameValuesStorage Storage => storage;
+        public GameValuesStorage Storage => storage;
 
-    private static GameValues _instance;
+        private static GameValues _instance;
 
-    private void Awake() {
-        _instance = this;
+        private void Awake() {
+            _instance = this;
+        }
     }
 }

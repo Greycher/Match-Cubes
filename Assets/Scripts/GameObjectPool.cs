@@ -1,49 +1,51 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObjectPool<T> where T : Component {
-    private List<T> _pool;
-    private readonly Transform _parent;
+namespace MatchCubes {
+    public class GameObjectPool<T> where T : Component {
+        private List<T> _pool;
+        private readonly Transform _parent;
 
-    public GameObjectPool() : this(null) { }
+        public GameObjectPool() : this(null) {
+        }
 
-    public GameObjectPool(Transform parent) {
-        _pool = new List<T>();
-        _parent = parent;
-    }
+        public GameObjectPool(Transform parent) {
+            _pool = new List<T>();
+            _parent = parent;
+        }
 
-    public void Push(T t) {
-        DeActivateAttachedGameObject(t);
-        SetParent(t);
-        _pool.Add(t);
-    }
+        public void Add(T t) {
+            DeActivateAttachedGameObject(t);
+            SetParent(t);
+            _pool.Add(t);
+        }
+        
+        private static void DeActivateAttachedGameObject(T t) {
+            var go = t.gameObject;
+            go.SetActive(false);
+        }
+        
+        private void SetParent(T t) {
+            var tr = t.transform;
+            tr.SetParent(_parent);
+        }
+        
+        public T RemoveRandom() {
+            return RemoveAt(Random.Range(0, _pool.Count));
+        }
 
-    private T Pop(int i) {
-        var t = _pool[i];
-        var lastIndex = _pool.Count - 1;
-        _pool[i] = _pool[lastIndex];
-        _pool.RemoveAt(lastIndex);
-        ActivateAttachedGameObject(t);
-        return t;
-    }
+        private T RemoveAt(int i) {
+            var t = _pool[i];
+            var lastIndex = _pool.Count - 1;
+            _pool[i] = _pool[lastIndex];
+            _pool.RemoveAt(lastIndex);
+            ActivateAttachedGameObject(t);
+            return t;
+        }
 
-    public T PopRandom() {
-        return Pop(Random.Range(0, _pool.Count));
-    }
-    
-    private static void DeActivateAttachedGameObject(T t) {
-        var go = t.gameObject;
-        go.SetActive(false);
-    }
-    
-    private static void ActivateAttachedGameObject(T t) {
-        var go = t.gameObject;
-        go.SetActive(true);
-    }
-    
-    private void SetParent(T t) {
-        var tr = t.transform;
-        tr.SetParent(_parent);
+        private static void ActivateAttachedGameObject(T t) {
+            var go = t.gameObject;
+            go.SetActive(true);
+        }
     }
 }
